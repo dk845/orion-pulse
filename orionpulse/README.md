@@ -20,7 +20,7 @@ None of this data talked to each other. There was no unified, queryable historic
 ## Architecture
 NASA DONKI API ──────────────┐
 JPL Horizons API ────────────┤
-NASA DSN Now (XML) ──────────┼──► Python Extractors ──► Raw JSON/XML ──► AWS S3
+NASA DSN Now (XML) ──────────┼──► Python Extractors ──► Raw JSON/XML(local)
 NASA Image Library API ──────┘                                              │
 │
 Pandas Transform
@@ -41,10 +41,9 @@ All orchestrated by Apache Airflow, containerized with Docker.
 ## Tech Stack
 
 | Layer | Technology | Purpose |
-|---|---|---|
 | Orchestration | Apache Airflow 2.8.1 | Schedules pipeline daily, monitors every task, auto-retries on failure |
 | Extraction | Python + Requests | Hits all 4 NASA APIs and pulls raw data |
-| Raw Storage | AWS S3 | Stores raw API responses as JSON before transformation |
+| Raw Storage | Local filesystem | Raw API responses stored as JSON files before transformation |
 | Transformation | Python + Pandas | Cleans and structures raw data into CSVs |
 | Analytics Layer | dbt | SQL models that aggregate and join clean data |
 | Database | PostgreSQL 15 | Final structured storage across 6 tables |
@@ -52,12 +51,11 @@ All orchestrated by Apache Airflow, containerized with Docker.
 | Dashboard | Streamlit + Plotly | Interactive web app with real NASA mission imagery |
 | Containerization | Docker Compose | Runs Airflow and PostgreSQL together with one command |
 
----
+
 
 ## Data Sources
 
 | Source | What it provides | Format |
-|---|---|---|
 | NASA DONKI API | Solar flares and geomagnetic storms during the mission | REST/JSON |
 | JPL Horizons API | Orion spacecraft position, velocity, and distance from Earth every 6 hours | Batch/Text |
 | NASA DSN Now | Ground station dish contacts and signal data | XML |
