@@ -1,0 +1,42 @@
+version: 2
+
+sources:
+  - name: public
+    database: airflow
+    schema: public
+    tables:
+      - name: fact_space_weather
+        description: Solar flares recorded during Artemis II mission
+        columns:
+          - name: flare_id
+            tests:
+              - unique
+              - not_null
+          - name: class_type
+            tests:
+              - not_null
+          - name: begin_time
+            tests:
+              - not_null
+
+      - name: fact_orbital_data
+        description: Orion spacecraft position every 6 hours
+        columns:
+          - name: timestamp
+            tests:
+              - unique
+              - not_null
+          - name: distance_from_earth_km
+            tests:
+              - not_null
+
+      - name: dim_news
+        description: Official NASA Artemis II news articles
+        columns:
+          - name: nasa_id
+            tests:
+              - unique
+              - not_null
+          - name: title
+            tests:
+              - not_null

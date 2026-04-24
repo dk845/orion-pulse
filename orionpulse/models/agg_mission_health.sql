@@ -1,20 +1,20 @@
 WITH daily_distance AS (
     SELECT
-        LEFT(timestamp, 10) as mission_date,
+        DATE(timestamp::timestamp) as mission_date,
         AVG(distance_from_earth_km) as avg_distance_km
     FROM fact_orbital_data
-    GROUP BY LEFT(timestamp, 10)
+    GROUP BY DATE(timestamp::timestamp)
 ),
 daily_flares AS (
     SELECT
-        LEFT(begin_time, 10) as mission_date,
+        DATE(begin_time::timestamp) as mission_date,
         COUNT(*) as flare_count,
         SUM(CASE WHEN class_type LIKE 'X%' THEN 3
                  WHEN class_type LIKE 'M%' THEN 2
                  WHEN class_type LIKE 'C%' THEN 1
                  ELSE 0 END) as flare_severity_score
     FROM fact_space_weather
-    GROUP BY LEFT(begin_time, 10)
+    GROUP BY DATE(begin_time::timestamp)
 )
 SELECT
     d.mission_date,
